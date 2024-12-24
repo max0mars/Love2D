@@ -2,10 +2,12 @@ minebot = {
     x = 500,
     y = 100,
     radius = 2,
-    speed = 0.2,
-    minetime = 5,
+    speed = 1,
+    minetime = 2,
+    minecount = 0,
     state = 0, -- 0 = walking to mine, 1 = mining, 2 = delivering metal
-    visible = true
+    visible = true,
+    carrying = false
 }
 
 function minebot:new(mine, factory)--mx, my, fx, fy)
@@ -34,8 +36,11 @@ function minebot:new(mine, factory)--mx, my, fx, fy)
 end
 
 function minebot:draw()
-    if(not visible) then return
+    if(not self.visible) then return end
     love.graphics.circle('line', self.x, self.y, self.radius)
+    if(self.carrying) then
+        love.graphics.circle('fill', self.x, self.y, self.radius)
+    end
 end
 
 function minebot:update(dt)
@@ -47,7 +52,24 @@ function minebot:update(dt)
             self.x = self.x + self.mineDirection.x * self.speed * dt
             self.y = self.y + self.mineDirection.y * self.speed * dt
         end
-    else if(self.state == 1) then
+    elseif(self.state == 1) then
         self.visible = false
+        self.minecount = self.minecount + dt
+        
+        if(self.minecount >= self.minetime) then 
+            self.state = 2 
+            self.visible = true
+            self.minecount = 0
+            self.carrying = true
+        end
+    elseif(self.state == 2) then
+        if(self.x >= self.fact_x and self.y >= self.fact_y) then
+            self.state = 0
+            self.carrying = false
+            return
+        else
+            self.x = self.x + self.factoryDirection.x * self.speed * dt
+            self.y = self.y + self.factoryDirection.y * self.speed * dt
+        end
     end
 end
