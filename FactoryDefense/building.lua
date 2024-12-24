@@ -14,4 +14,5 @@ end
 
 function building.draw(self)
     love.graphics.rectangle("fill", self.x, self.y, self.w,self.h)
+
 end

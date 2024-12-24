@@ -9,6 +9,7 @@ function love.load()
     mine = building:new(20, 200, 30, 30)
 
     factory = building:new(100, 300, 50, 50)
+    factory.metal = 0
 
     minebot = minebot:new(mine, factory)
 end
