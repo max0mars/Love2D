@@ -1,6 +1,7 @@
 require('building')
 require('entity')
 require('minebot')
+require('factory')
 
 function love.load()
     love.window.setTitle('Factory Defense')
@@ -8,21 +9,30 @@ function love.load()
 
     mine = building:new(20, 200, 30, 30)
 
-    factory = building:new(100, 300, 50, 50)
-    factory.metal = 0
+    factory = factory:new(100, 300, 50, 50)
 
-    minebot = minebot:new(mine, factory)
+    minebots = {}
+    m1 = minebot:new(mine, factory)
+
+    table.insert(minebots, m1)
 end
 
 function love.update(dt)
-    minebot:update(dt)
+    for i in ipairs(minebots) do
+        minebots[i]:update(dt)
+    end
 end
 
 function love.draw()
-    love.graphics.setColor(0,1,0, 1)
     mine:draw()
     factory:draw()
-    love.graphics.setColor(1,0,0, 1)
-    minebot:draw()
-
+    for i in ipairs(minebots) do
+        minebots[i]:draw()
+    end
 end
+
+function love.keypressed(key, scancode, isrepeat)
+    if key == "escape" then
+       love.event.quit()
+    end
+ end

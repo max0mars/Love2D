@@ -2,9 +2,11 @@ minebot = {
     x = 500,
     y = 100,
     radius = 3,
-    speed = 1,
-    minetime = 2,
-    minecount = 0,
+    speed = 0.6,
+    carryspeed = 0.2,
+    minerate = 50,
+    capacity = 100,
+    metalcount = 0,
     state = 0, -- 0 = walking to mine, 1 = mining, 2 = delivering metal
     visible = true,
     carrying = false,
@@ -59,6 +61,7 @@ end
 function minebot:update(dt)
     if(self.state == 0) then--STATE 0
         if(self.x <= self.mine_x and self.y <= self.mine_y) then
+        --if(self.x <= self.mine_x and self.y <= self.mine_y) then
             self.state = 1
             return
         else
@@ -69,12 +72,13 @@ function minebot:update(dt)
 
     elseif(self.state == 1) then --STATE 1
         self.visible = false
-        self.minecount = self.minecount + dt
+        self.metalcount = self.metalcount + self.minerate * dt
         
-        if(self.minecount >= self.minetime) then 
+        if(self.metalcount >= self.capacity) then 
+            self.metalcount = self.capacity
             self.state = 2 
             self.visible = true
-            self.minecount = 0
+            self.metalcount = 0
             self.carrying = true
         end
 
@@ -83,10 +87,11 @@ function minebot:update(dt)
         if(self.x >= self.fact_x and self.y >= self.fact_y) then
             self.state = 0
             self.carrying = false
+            factory.metal = factory.metal + self.capacity
             return
         else
-            self.x = self.x + self.factoryDirection.x * self.speed * dt
-            self.y = self.y + self.factoryDirection.y * self.speed * dt
+            self.x = self.x + self.factoryDirection.x * self.carryspeed * dt
+            self.y = self.y + self.factoryDirection.y * self.carryspeed * dt
         end
     end
 end
