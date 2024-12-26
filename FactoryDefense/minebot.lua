@@ -3,6 +3,13 @@ minebot = {
     y = 100,
     radius = 3,
     speed = 0.6,
+    color = {
+        r = 20,
+        g = 200,
+        b = 20
+    },
+
+    --minebot exclusive
     carryspeed = 0.2,
     minerate = 50,
     capacity = 100,
@@ -10,14 +17,9 @@ minebot = {
     state = 0, -- 0 = walking to mine, 1 = mining, 2 = delivering metal
     visible = true,
     carrying = false,
-    color = {
-        r = 20,
-        g = 200,
-        b = 20
-    }
 }
 
-function minebot:new(mine, factory)--mx, my, fx, fy)
+function minebot:new(mine, factory) --requires mine and facotry to calculate movement points
     local o = {}
     setmetatable(o, self)
     self.__index = self
@@ -47,8 +49,11 @@ function minebot:new(mine, factory)--mx, my, fx, fy)
     return o
 end
 
+--[[
+    If the bot is visible draw to the screen at x,y
+    If the bot is carrying draw a grey circle inside the bot
+]]
 function minebot:draw()
-
     if(not self.visible) then return end
     love.graphics.setColor(love.math.colorFromBytes(self.color.r, self.color.g, self.color.b))
     love.graphics.circle('line', self.x, self.y, self.radius)
@@ -58,10 +63,15 @@ function minebot:draw()
     end
 end
 
+--[[
+    3 states: walking to mine, mining, carrying metal to factory
+    state 0: walks at normal speed in straight line to mine
+    state 1: bot disapears until metal capacity fills up
+    state 2: bot reapears and walks to factory at a slower speed
+]]
 function minebot:update(dt)
-    if(self.state == 0) then--STATE 0
+    if(self.state == 0) then--***********STATE 0***********
         if(self.x <= self.mine_x and self.y <= self.mine_y) then
-        --if(self.x <= self.mine_x and self.y <= self.mine_y) then
             self.state = 1
             return
         else
@@ -70,7 +80,7 @@ function minebot:update(dt)
         end
 
 
-    elseif(self.state == 1) then --STATE 1
+    elseif(self.state == 1) then --***********STATE 1***********
         self.visible = false
         self.metalcount = self.metalcount + self.minerate * dt
         
@@ -83,7 +93,7 @@ function minebot:update(dt)
         end
 
 
-    elseif(self.state == 2) then --STATE 2
+    elseif(self.state == 2) then --***********STATE 2***********
         if(self.x >= self.fact_x and self.y >= self.fact_y) then
             self.state = 0
             self.carrying = false

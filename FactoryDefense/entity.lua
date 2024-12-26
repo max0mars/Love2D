@@ -1,6 +1,6 @@
 entity = {}
 
-function entity.init(self)
+function entity.new(self, color)
     o = {}
     setmetatable(o, self)
     self.__index = self
@@ -9,6 +9,11 @@ function entity.init(self)
     o.y = 0
     o.target = nil
     o.alive = true
+    o.color = {
+        r = 20,
+        g = 200,
+        b = 20
+    }
 
     --stats
     o.speed = 5
@@ -16,6 +21,9 @@ function entity.init(self)
     o.range = 15
     o.damage = 25
     o.attackspeed = 1
+
+    --other
+    
     return o
 end
 
