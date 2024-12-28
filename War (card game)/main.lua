@@ -4,11 +4,13 @@ end
 
 wins1 = 0
 wins2 = 0
-total = 1000
+total = 100
 auto = -1
 totalturns = 0
 simover = 0
 scored = false
+min = 1000
+max = 0
 
 function start()
     player1 = {
@@ -65,7 +67,6 @@ function love.update(dt)
         return
     end     
     if(play == 1 or love.keyboard.isDown('p') or auto == 1) then
-        turn = turn + 1
         playhand()
         play = 0
     end
@@ -83,6 +84,12 @@ function simulate()
         else
             wins1 = wins1 + 1
         end
+        if(turn < min) then
+            min = turn
+        end
+        if turn > max then
+            max = turn
+        end
     end
     simover = 1
 end
@@ -92,6 +99,8 @@ function love.draw()
     love.graphics.print('Player 2 wins: ' .. wins2, 500, 100)
     if(simover == 1) then
         love.graphics.print('Turns played: ' .. totalturns, 100, 100)
+        love.graphics.print('Shortest game: ' .. min, 100, 150)
+        love.graphics.print('Longest game: ' .. max, 100, 200)
         return
     end
     if(gameover) then
@@ -122,6 +131,7 @@ function love.draw()
 end
 
 function playhand(pot)
+    turn = turn + 1
     pot = pot or {}
     card1 = playCard(player1)
     card2 = playCard(player2)
@@ -185,6 +195,8 @@ function love.keypressed(key, scancode, isrepeat)
         wins2 = 0
         totalturns = 0
         simover = 0
+        min = 1000
+        max = 0
         start()
     elseif key == 'o' then
         simulate()
