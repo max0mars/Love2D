@@ -207,7 +207,7 @@ function shuffle(array)
     size = table.getn(array)
     for i = 1, #array do
         -- Pick a random index between 1 and i
-        local j = love.math.random(i)
+        local j = love.math.random(#array)
         -- Swap array[i] and array[j]
         array[i], array[j] = array[j], array[i]
     end
