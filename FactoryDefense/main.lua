@@ -39,5 +39,7 @@ function love.keypressed(key, scancode, isrepeat)
        love.event.quit()
     elseif key == "space" then
         table.insert(minebots, minebot:new(mine, factory))
+    elseif key == "u" then
+        m1:upgrade('capacity', 50)
     end
  end

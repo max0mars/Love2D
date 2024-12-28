@@ -17,7 +17,11 @@ minebot = {
     state = 0, -- 0 = walking to mine, 1 = mining, 2 = delivering metal
     visible = true,
     carrying = false,
+    refresh = 1
 }
+
+radius_scaler = 0.01
+base_radius = 2
 
 function minebot:new(mine, factory) --requires mine and facotry to calculate movement points
     local o = {}
@@ -70,6 +74,10 @@ end
     state 2: bot reapears and walks to factory at a slower speed
 ]]
 function minebot:update(dt)
+    if(self.refresh == 1) then
+        self.radius = base_radius + self.capacity * radius_scaler
+        self.refresh = 0
+    end
     if(self.state == 0) then--***********STATE 0***********
         if(self.x <= self.mine_x and self.y <= self.mine_y) then
             self.state = 1
@@ -88,7 +96,6 @@ function minebot:update(dt)
             self.metalcount = self.capacity
             self.state = 2 
             self.visible = true
-            self.metalcount = 0
             self.carrying = true
         end
 
@@ -97,11 +104,17 @@ function minebot:update(dt)
         if(self.x >= self.fact_x and self.y >= self.fact_y) then
             self.state = 0
             self.carrying = false
-            factory.metal = factory.metal + self.capacity
+            factory.metal = factory.metal + self.metalcount
+            self.metalcount = 0
             return
         else
             self.x = self.x + self.factoryDirection.x * self.carryspeed * dt
             self.y = self.y + self.factoryDirection.y * self.carryspeed * dt
         end
     end
+end
+
+function minebot:upgrade(stat, value)
+    self[stat] = self[stat] + value
+    self.refresh = 1
 end
