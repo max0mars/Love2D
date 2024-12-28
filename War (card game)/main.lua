@@ -4,10 +4,11 @@ end
 
 wins1 = 0
 wins2 = 0
-total = 10000
+total = 1000
 auto = -1
 totalturns = 0
 simover = 0
+scored = false
 
 function start()
     player1 = {
@@ -51,6 +52,16 @@ end
 
 function love.update(dt)   
     if(gameover) then
+        if(scored) then
+            if(player1.lose == 1) then
+                wins2 = wins2 + 1
+                scored = false
+            end
+            if(player2.lose == 1) then
+                wins1 = wins1 + 1
+                scored = false
+            end
+        end
         return
     end     
     if(play == 1 or love.keyboard.isDown('p') or auto == 1) then
@@ -61,7 +72,7 @@ function love.update(dt)
 end
 
 function simulate()
-    while(wins1 + wins2 < total) do
+    while(wins1 + wins2 + 1 < total) do
         start()
         while(not gameover) do
             playhand()
@@ -93,7 +104,7 @@ function love.draw()
         return
     end
     
-    love.graphics.print('Player 1: ' .. player1.hand .. ', ' .. player2.table, 100, 10)
+    love.graphics.print('Player 1: ' .. player1.hand .. ', ' .. player1.table, 100, 10)
     love.graphics.print('Player 2: ' .. player2.hand .. ', ' .. player2.table, 300, 10)
     for i = 1, #player1.inhand do
         love.graphics.print(player1.inhand[i], 100, i * 12 + 20)
@@ -142,6 +153,7 @@ function playCard(player)
         if(player.table == 0) then
             gameover = true
             player.lose = 1
+            scored = true
             return -1
         else
             while(player.table ~= 0) do
@@ -149,7 +161,9 @@ function playCard(player)
                 player.hand = player.hand + 1
                 player.table = player.table - 1
             end
-            shuffle(player.inhand)
+            for i = 1, 20 do
+                shuffle(player.inhand)
+            end
         end
     end
     player.hand = player.hand - 1
@@ -171,6 +185,7 @@ function love.keypressed(key, scancode, isrepeat)
         wins2 = 0
         totalturns = 0
         simover = 0
+        start()
     elseif key == 'o' then
         simulate()
     end
