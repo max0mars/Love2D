@@ -40,10 +40,10 @@ function love.keypressed(key, scancode, isrepeat)
         delete(test_table)
     end
 
- end
+end
 
 
- function delete(t)
+function delete(t)
     local j = 1
     n = #t
     for i = 1, n do

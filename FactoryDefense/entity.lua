@@ -18,6 +18,9 @@ function entity.new(self, color)
         g = 200,
         b = 20
     }
+    if(color) then
+        o.color = color
+    end
 
     --stats
     o.speed = 5

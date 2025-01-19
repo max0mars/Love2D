@@ -3,6 +3,7 @@ require('entity')
 require('minebot')
 require('factory')
 require('defensebot')
+require('helper')
 
 function love.load()
     love.window.setTitle('Factory Defense')
@@ -15,14 +16,14 @@ function love.load()
     minebots = {}
     m1 = minebot:new(mine, factory)
 
-    test = defensebot:new()
+    d1 = defensebot:new()
 
     table.insert(minebots, m1)
 end
 
 function love.update(dt)
+    d1:update(dt)
     for i in ipairs(minebots) do
-        if()
         minebots[i]:update(dt)
     end
 end
@@ -30,6 +31,7 @@ end
 function love.draw()
     mine:draw()
     factory:draw()
+    d1:draw()
     for i in ipairs(minebots) do
         minebots[i]:draw()
     end
