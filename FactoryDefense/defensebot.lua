@@ -8,11 +8,11 @@
 ]]
 
 defensebot = {
-    yvalue = love.math.random(250, 450)
-    ydir = 1
-    if(yvalue > 350) then
-        ydir = -1
-    end
+    -- yvalue = love.math.random(250, 450)
+    -- ydir = 1
+    -- if(yvalue > 350) then
+    --     ydir = -1
+    -- end
 }
 
 function defensebot:new()
@@ -21,12 +21,12 @@ function defensebot:new()
     self.__index = entity:new()
 end
 
-function defensebot:update(dt, dbots)
-    if(abs(self.y - self.yvalue) > 3) then
-        self.y = self.y + self.speed*dt*ydir
-    end
-    self.x = self.x + self.speed*dt
-    if(self.x > 810) then
-        table.remove(self)
+-- function defensebot:update(dt, dbots)
+--     if(abs(self.y - self.yvalue) > 3) then
+--         self.y = self.y + self.speed*dt*ydir
+--     end
+--     self.x = self.x + self.speed*dt
+--     if(self.x > 810) then
+--         table.remove(self)
 
-end
+-- end
