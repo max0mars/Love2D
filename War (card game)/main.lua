@@ -4,7 +4,7 @@ end
 
 wins1 = 0
 wins2 = 0
-total = 100
+total = 100000
 auto = -1
 totalturns = 0
 simover = 0
