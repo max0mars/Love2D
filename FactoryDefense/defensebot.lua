@@ -25,7 +25,7 @@ function defensebot:new()
     o.color = {
         r = 20,
         g = 200,
-        b = 20
+        b = 200
     }
     o.radius = 4
     if(o.yvalue < 350) then
@@ -36,7 +36,7 @@ function defensebot:new()
 end
 
 
-function defensebot:update(dt) -- error: bot is going out of bounds
+function defensebot:update(dt)
     if(abs(self.y - self.yvalue) > 3) then
         self.y = self.y + self.speed*dt*self.ydir
     end
@@ -44,10 +44,6 @@ function defensebot:update(dt) -- error: bot is going out of bounds
     if(self.x > 400) then
         self.delete = true
     end
-end
-
-function defensebot:tt()
-    self.x = 500
 end
 
 function defensebot:draw()

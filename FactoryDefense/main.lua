@@ -3,7 +3,7 @@ require('entity')
 require('minebot')
 require('factory')
 require('defensebot')
-require('helper')
+require('enemybot')
 
 function love.load()
     love.window.setTitle('Factory Defense')
@@ -17,15 +17,20 @@ function love.load()
     m1 = minebot:new(mine, factory)
 
     defensebots = {}
-    table.insert(defensebots, defensebot:new())
+
+    enemybots = {}
 
     spawnrate = 0.1
     counter = spawnrate
+    counter2 = spawnrate
 
     table.insert(minebots, m1)
 end
 
 function love.update(dt)
+    for i in ipairs(enemybots) do
+        enemybots[i]:update(dt)
+    end
     for i in ipairs(defensebots) do
         defensebots[i]:update(dt)
     end
@@ -33,19 +38,17 @@ function love.update(dt)
         minebots[i]:update(dt)
     end
     CleanTable(defensebots)
-    if love.keyboard.isDown('2') then
-        counter = counter - dt
-        if(counter < 0) then
-            table.insert(defensebots, defensebot:new())
-            counter = spawnrate
-        end
-    end
+    
 
+    keydown(dt) -- keyboard input for holding down a button
 end
 
 function love.draw()
     mine:draw()
     factory:draw()
+    for i in ipairs(enemybots) do
+        enemybots[i]:draw()
+    end
     for i in ipairs(defensebots) do
         defensebots[i]:draw()
     end
@@ -55,9 +58,6 @@ function love.draw()
     love.graphics.setColor(0,1,0)
     love.graphics.line(0, 200, 800, 200)
     love.graphics.line(0, 500, 800, 500)
-    -- love.graphics.print(d1.yvalue, 400, 100)
-    -- love.graphics.print(d1.y, 400, 50)
-    -- love.graphics.print(d1.x, 400, 10)
 
 end
 
@@ -68,8 +68,25 @@ function love.keypressed(key, scancode, isrepeat)
         table.insert(minebots, minebot:new(mine, factory))
     elseif key == "u" then
         m1:upgrade('capacity', 50)
-    elseif key == "1" then
-        table.insert(defensebots, defensebot:new())
+    end
+end
+
+function keydown(dt)
+    if love.keyboard.isDown('1') then
+        counter = counter - dt
+        if(counter < 0) then
+            table.insert(defensebots, defensebot:new())
+            counter = spawnrate
+        end
+    end
+
+
+    if love.keyboard.isDown('2') then
+        counter2 = counter2 - dt
+        if(counter2 < 0) then
+            table.insert(enemybots, enemybot:new())
+            counter2 = spawnrate
+        end
     end
 end
 
