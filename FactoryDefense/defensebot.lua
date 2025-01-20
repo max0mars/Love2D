@@ -13,20 +13,22 @@ function defensebot:new()
     o = {}
     setmetatable(o, self)
     self.__index = self
-    o.x = 300
-    o.y = 300
+    o.x = 150
+    o.y = 350
 
     o.delete = false
-    o.yvalue = love.math.random(250, 450)
+    o.yvalue = love.math.random(200, 500)
+    if(o.yvalue < 300) then o.yvalue = o.yvalue + 50
+    elseif o.yvalue > 400 then o.yvalue = o.yvalue - 50 end
     o.ydir = 1
-    o.speed = 15
+    o.speed = 50
     o.color = {
         r = 20,
         g = 200,
         b = 20
     }
     o.radius = 4
-    if(o.yvalue > 350) then
+    if(o.yvalue < 350) then
         o.ydir = -1
     end
 
@@ -39,7 +41,7 @@ function defensebot:update(dt) -- error: bot is going out of bounds
         self.y = self.y + self.speed*dt*self.ydir
     end
     self.x = self.x + self.speed*dt
-    if(self.x > 810) then
+    if(self.x > 400) then
         self.delete = true
     end
 end
