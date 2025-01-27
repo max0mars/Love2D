@@ -21,7 +21,6 @@ function defensebot:new()
     if(o.yvalue < 300) then o.yvalue = o.yvalue + 50
     elseif o.yvalue > 400 then o.yvalue = o.yvalue - 50 end
     o.ydir = 1
-    o.speed = 50
     o.color = {
         r = 20,
         g = 200,
@@ -31,24 +30,28 @@ function defensebot:new()
     if(o.yvalue < 350) then
         o.ydir = -1
     end
+
+    o.target = nil
+
     --stats
-    o.speed = 5
+    o.speed = 50
     o.health = 100
-    o.range = 15
+    o.range = 100
     o.rangeSq = o.range * o.range
     o.damage = 25
     o.attackspeed = 1
+    o.distance = 9999
     return o
 end
 
 
-function defensebot:update(dt)
-    if(not self.attack()) then
-        self.move()
+function defensebot:update(dt, enemies)
+    if not self:attack(enemies) then
+        self:move(dt)
     end
 end
 
-function move()
+function defensebot:move(dt)
     if(abs(self.y - self.yvalue) > 3) then
         self.y = self.y + self.speed*dt*self.ydir
     end
@@ -64,24 +67,24 @@ end
     returns true if enemy found, otherwise false
     ** untested! **
 ]]
-function defensebot:attack()
-    target = nil
+function defensebot:attack(enemies)
+    --if(enemies == nil) then return false end
+
+    self.target = nil
     prev = 999
-    for i in ipairs(enemies) do
-        x = enemies[i].x - self.x
-        y = enemies[i].y - self.y
+    for i, enemy in ipairs(enemies) do
+        x = enemy.x - self.x
+        y = enemy.y - self.y
         dist = x*x + y*y
         if dist < self.rangeSq then
             if(dist < prev) then
-                target = enemies[i]
+                self.target = enemies[i]
                 prev = dist
             end
         end
     end
-    if (target) then return true 
+    if (self.target) then return true 
     else return false end
-    -- check for enemy in range
-    -- fire at enemy
 end
 
 function defensebot:draw()

@@ -32,15 +32,16 @@ function love.update(dt)
         enemybots[i]:update(dt)
     end
     for i in ipairs(defensebots) do
-        defensebots[i]:update(dt)
+        defensebots[i]:update(dt, enemybots)
     end
     for i in ipairs(minebots) do
         minebots[i]:update(dt)
     end
-    CleanTable(defensebots)
     
 
     keydown(dt) -- keyboard input for holding down a button
+    -- CleanTable(defensebots)
+    -- CleanTable(enemybots)
 end
 
 function love.draw()
