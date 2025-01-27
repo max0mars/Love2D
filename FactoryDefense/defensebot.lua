@@ -45,8 +45,8 @@ function defensebot:new()
 end
 
 
-function defensebot:update(dt, enemies)
-    if not self:attack(enemies) then
+function defensebot:update(dt, enemybots)
+    if not self:attack(enemybots) then
         self:move(dt)
     end
 end
@@ -56,7 +56,7 @@ function defensebot:move(dt)
         self.y = self.y + self.speed*dt*self.ydir
     end
     self.x = self.x + self.speed*dt
-    if(self.x > 400) then
+    if(self.x > 600) then
         self.delete = true
     end
 end
@@ -67,18 +67,18 @@ end
     returns true if enemy found, otherwise false
     ** untested! **
 ]]
-function defensebot:attack(enemies)
+function defensebot:attack(enemybots)
     --if(enemies == nil) then return false end
 
     self.target = nil
     prev = 999
-    for i, enemy in ipairs(enemies) do
+    for i, enemy in ipairs(enemybots) do
         x = enemy.x - self.x
         y = enemy.y - self.y
         dist = x*x + y*y
         if dist < self.rangeSq then
             if(dist < prev) then
-                self.target = enemies[i]
+                self.target = enemybots[i]
                 prev = dist
             end
         end

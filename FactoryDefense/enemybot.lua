@@ -17,15 +17,48 @@ function enemybot:new()
         b = 20
     }
     o.radius = 4
+    o.target = nil
+    --stats
+    o.speed = 50
+    o.health = 100
+    o.range = 100
+    o.rangeSq = o.range * o.range
+    o.damage = 25
+    o.attackspeed = 1
+    o.distance = 9999
 
     return o
 end
 
-function enemybot:update(dt)
+function enemybot:update(dt, defensebots)
+    if not self:attack(defensebots) then
+        self:move(dt)
+    end
+end
+
+function enemybot:move(dt)
     self.x = self.x - self.speed*dt
-    if(self.x > 400) then
+    if(self.x < 300) then
         self.delete = true
     end
+end
+
+function enemybot:attack(defensebots)
+    self.target = nil
+    prev = 999
+    for i, bot in ipairs(defensebots) do
+        x = bot.x - self.x
+        y = bot.y - self.y
+        dist = x*x + y*y
+        if dist < self.rangeSq then
+            if(dist < prev) then
+                self.target = defensebots[i]
+                prev = dist
+            end
+        end
+    end
+    if (self.target) then return true 
+    else return false end
 end
 
 function enemybot:draw()

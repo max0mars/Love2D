@@ -29,7 +29,7 @@ end
 
 function love.update(dt)
     for i in ipairs(enemybots) do
-        enemybots[i]:update(dt)
+        enemybots[i]:update(dt, defensebots)
     end
     for i in ipairs(defensebots) do
         defensebots[i]:update(dt, enemybots)
