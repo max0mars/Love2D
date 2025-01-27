@@ -42,6 +42,7 @@ function defensebot:new(bullets)
     o.range = 100
     o.rangeSq = o.range * o.range
     o.damage = 25
+    o.bulletSpeed = 100
     o.attackspeed = 1
     o.distance = 9999
     return o
@@ -73,7 +74,7 @@ end
 
 function defensebot:shoot()
     --create bullet
-    table.insert(self.bullets, bullet:new({x = self.x, y = self.y}, self.target, self.damage, 100))
+    table.insert(self.bullets, bullet:new({x = self.x, y = self.y}, self.target, self.damage, self.bulletSpeed))
 end
 
 --[[

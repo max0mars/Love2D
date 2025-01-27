@@ -5,6 +5,7 @@ require('factory')
 require('defensebot')
 require('enemybot')
 require('bullet')
+--io.stdout:setvbuf("no") May or may not be needed for print statements
 
 function love.load()
     love.window.setTitle('Factory Defense')
@@ -16,18 +17,8 @@ function love.load()
 
     minebots = {}
     m1 = minebot:new(mine, factory)
-
-    startspot = {
-        x = 100,
-        y = 100
-    }
-    endspot = {
-        x = 500,
-        y = 100
-    }
-
+    print("this is a demo")
     bullets = {}
-    table.insert(bullets, bullet:new(startspot, endspot, 10, 100))
 
     defensebots = {}
 

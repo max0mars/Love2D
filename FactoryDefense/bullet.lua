@@ -7,8 +7,7 @@ function bullet:new(startspot, tar, damage, bspeed)
         damage = damage,
         x = startspot.x,
         y = startspot.y,
-        speed = 200,
-        hit = false,
+        speed = bspeed,
         delete = false
     }
     setmetatable(b, bullet)
@@ -20,7 +19,7 @@ function bullet:update(dt)
 
     local direction_x = self.target.x - self.x
     local direction_y = self.target.y - self.y
-    local distance = direction_x + direction_y
+    local distance = math.sqrt(direction_x * direction_x + direction_y * direction_y)
 
     if distance < self.speed * dt then
         self.x = self.target.x
@@ -39,7 +38,6 @@ function bullet:draw()
 end
 
 function bullet:hitTarget()
-    self.hit = true
     if self.target.takeDamage ~= nil then
         self.target:takeDamage(self.damage)
     end
