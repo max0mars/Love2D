@@ -1,6 +1,7 @@
+require ('bullet')
 enemybot = {}
 
-function enemybot:new()
+function enemybot:new(bullets)
     o = {}
     setmetatable(o, self)
     self.__index = self
@@ -18,6 +19,9 @@ function enemybot:new()
     }
     o.radius = 4
     o.target = nil
+    o.counter = 0  
+    o.bullets = bullets
+
     --stats
     o.speed = 50
     o.health = 100
@@ -31,8 +35,15 @@ function enemybot:new()
 end
 
 function enemybot:update(dt, defensebots)
+    if self.delete then return end
+    self.counter = self.counter + dt
     if not self:attack(defensebots) then
         self:move(dt)
+    else
+        if(self.counter > self.attackspeed) then
+            self.counter = 0
+            self:shoot()
+        end
     end
 end
 
@@ -59,6 +70,18 @@ function enemybot:attack(defensebots)
     end
     if (self.target) then return true 
     else return false end
+end
+
+function enemybot:shoot()
+    --create bullet
+    table.insert(self.bullets, bullet:new({x = self.x, y = self.y}, self.target, self.damage, 100))
+end
+
+function enemybot:takeDamage(damage)
+    self.health = self.health - damage
+    if self.health <= 0 then
+        self.delete = true
+    end
 end
 
 function enemybot:draw()

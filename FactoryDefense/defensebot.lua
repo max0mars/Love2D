@@ -1,3 +1,4 @@
+require('bullet')
 --require('entity')
 
 --[[
@@ -9,7 +10,7 @@
 
 defensebot = {}
 
-function defensebot:new()
+function defensebot:new(bullets)
     o = {}
     setmetatable(o, self)
     self.__index = self
@@ -32,6 +33,8 @@ function defensebot:new()
     end
 
     o.target = nil
+    o.bullets = bullets
+    o.counter = 0
 
     --stats
     o.speed = 50
@@ -46,8 +49,15 @@ end
 
 
 function defensebot:update(dt, enemybots)
+    if self.delete then return end
+    self.counter = self.counter + dt
     if not self:attack(enemybots) then
         self:move(dt)
+    else
+        if(self.counter > self.attackspeed) then
+            self.counter = 0
+            self:shoot()
+        end
     end
 end
 
@@ -56,11 +66,15 @@ function defensebot:move(dt)
         self.y = self.y + self.speed*dt*self.ydir
     end
     self.x = self.x + self.speed*dt
-    if(self.x > 600) then
+    if(self.x > 780) then
         self.delete = true
     end
 end
 
+function defensebot:shoot()
+    --create bullet
+    table.insert(self.bullets, bullet:new({x = self.x, y = self.y}, self.target, self.damage, 100))
+end
 
 --[[
     checks for targets in range and sets target to closest
@@ -90,6 +104,13 @@ end
 function defensebot:draw()
     love.graphics.setColor(love.math.colorFromBytes(self.color.r, self.color.g, self.color.b))
     love.graphics.circle('line', self.x, self.y, self.radius)
+end
+
+function defensebot:takeDamage(damage)
+    self.health = self.health - damage
+    if self.health <= 0 then
+        self.delete = true
+    end
 end
 
 function abs(val)

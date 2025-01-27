@@ -4,6 +4,7 @@ require('minebot')
 require('factory')
 require('defensebot')
 require('enemybot')
+require('bullet')
 
 function love.load()
     love.window.setTitle('Factory Defense')
@@ -15,6 +16,18 @@ function love.load()
 
     minebots = {}
     m1 = minebot:new(mine, factory)
+
+    startspot = {
+        x = 100,
+        y = 100
+    }
+    endspot = {
+        x = 500,
+        y = 100
+    }
+
+    bullets = {}
+    table.insert(bullets, bullet:new(startspot, endspot, 10, 100))
 
     defensebots = {}
 
@@ -37,11 +50,15 @@ function love.update(dt)
     for i in ipairs(minebots) do
         minebots[i]:update(dt)
     end
+    for i in ipairs(bullets) do
+        bullets[i]:update(dt)
+    end
     
 
     keydown(dt) -- keyboard input for holding down a button
-    -- CleanTable(defensebots)
-    -- CleanTable(enemybots)
+    CleanTable(defensebots)
+    CleanTable(enemybots)
+    CleanTable(bullets)
 end
 
 function love.draw()
@@ -55,6 +72,9 @@ function love.draw()
     end
     for i in ipairs(minebots) do
         minebots[i]:draw()
+    end
+    for i in ipairs(bullets) do
+        bullets[i]:draw()
     end
     love.graphics.setColor(0,1,0)
     love.graphics.line(0, 200, 800, 200)
@@ -76,7 +96,7 @@ function keydown(dt)
     if love.keyboard.isDown('1') then
         counter = counter - dt
         if(counter < 0) then
-            table.insert(defensebots, defensebot:new())
+            table.insert(defensebots, defensebot:new(bullets))
             counter = spawnrate
         end
     end
@@ -85,7 +105,7 @@ function keydown(dt)
     if love.keyboard.isDown('2') then
         counter2 = counter2 - dt
         if(counter2 < 0) then
-            table.insert(enemybots, enemybot:new())
+            table.insert(enemybots, enemybot:new(bullets))
             counter2 = spawnrate
         end
     end

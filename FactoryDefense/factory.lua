@@ -18,6 +18,7 @@ function factory.new(self, x, y, w, h)
     o.y = y
     o.w = w
     o.h = h
+    o.health = 1000
     o.textx = o.x + o.w/2
     o.texty = o.y + o.h/2
 
