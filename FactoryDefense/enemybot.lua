@@ -28,9 +28,8 @@ function enemybot:new(bullets)
     o.range = 100
     o.rangeSq = o.range * o.range
     o.damage = 25
-    o.bulletSpeed = 100
+    o.bulletSpeed = 1000
     o.attackspeed = 1
-    o.distance = 9999
 
     return o
 end
@@ -56,8 +55,9 @@ function enemybot:move(dt)
 end
 
 function enemybot:attack(defensebots)
+    if defensebots == nil then return false end
     self.target = nil
-    prev = 999
+    prev = 999999999
     for i, bot in ipairs(defensebots) do
         x = bot.x - self.x
         y = bot.y - self.y
