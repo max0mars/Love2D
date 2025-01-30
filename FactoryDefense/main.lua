@@ -5,6 +5,7 @@ require('factory')
 require('defensebot')
 require('enemybot')
 require('bullet')
+require('button')
 --io.stdout:setvbuf("no") May or may not be needed for print statements
 
 function love.load()
@@ -17,18 +18,33 @@ function love.load()
 
     minebots = {}
     m1 = minebot:new(mine, factory)
-    print("this is a demo")
+
     bullets = {}
 
     defensebots = {}
 
     enemybots = {}
 
+    buttons = {}
+
     spawnrate = 0.1
     counter = spawnrate
     counter2 = spawnrate
 
     table.insert(minebots, m1)
+
+    -- table.insert(buttons, button:new(350, 550, 100, 50, 'DefenseBot', function() 
+    --     for i = 1, 10 do
+    --         table.insert(defensebots, defensebot:new(bullets))
+    --     end
+    -- end)
+
+    butt = button:new(500, 550, 100, 50, 'DefenseBot', function() 
+        for i = 1, 10 do
+            table.insert(DefenseBot, defensebots:new(bullets))
+        end
+    end)
+
 end
 
 function love.update(dt)
@@ -44,7 +60,6 @@ function love.update(dt)
     for i in ipairs(bullets) do
         bullets[i]:update(dt)
     end
-    
 
     keydown(dt) -- keyboard input for holding down a button
     CleanTable(defensebots)
@@ -67,6 +82,9 @@ function love.draw()
     for i in ipairs(bullets) do
         bullets[i]:draw()
     end
+    for i in ipairs(buttons) do
+        buttons[i]:draw()
+    end
     love.graphics.setColor(0,1,0)
     love.graphics.line(0, 200, 800, 200)
     love.graphics.line(0, 500, 800, 500)
@@ -80,6 +98,19 @@ function love.keypressed(key, scancode, isrepeat)
         table.insert(minebots, minebot:new(mine, factory))
     elseif key == "u" then
         m1:upgrade('capacity', 50)
+    elseif key == "9" then
+        for i = 1, 10 do
+            table.insert(defensebots, defensebot:new(bullets))
+            table.insert(enemybots, enemybot:new(bullets))
+        end
+    end
+end
+
+function love.mousepressed(x, y, button, istouch, presses)
+    if button == 1 then -- Left mouse button
+        for i in ipairs(buttons) do
+            buttons[i]:click(x, y)
+        end
     end
 end
 
