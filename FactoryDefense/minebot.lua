@@ -11,8 +11,8 @@ minebot = {
 
     --minebot exclusive
     carryspeed = 0.2,
-    minerate = 50,
-    capacity = 100,
+    minerate = 5,
+    capacity = 10,
     metalcount = 0,
     state = 0, -- 0 = walking to mine, 1 = mining, 2 = delivering metal
     visible = true,
@@ -20,7 +20,7 @@ minebot = {
     refresh = 1
 }
 
-radius_scaler = 0.01
+radius_scaler = 0.1
 base_radius = 2
 
 function minebot:new(mine, factory) --requires mine and facotry to calculate movement points

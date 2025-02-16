@@ -1,7 +1,7 @@
 button = {}
 button.__index = button
 
-function button:new(x, y, width, height, text, cost, callback)
+function button:new(x, y, width, height, text, cost, callback, increment)
     local b = {
         x = x,
         y = y,
@@ -11,7 +11,8 @@ function button:new(x, y, width, height, text, cost, callback)
         callback = callback,
         progress = 0,
         progressMax = 100,
-        cost = cost
+        cost = cost,
+        increment = increment or 1
     }
     setmetatable(b, button)
     return b
@@ -47,6 +48,8 @@ function button:click(x, y, metal)
         if metal >= self.cost and self:isClicked(x, y) and self.callback then
             self.callback()
             metal = metal - self.cost
+            self.cost = self.cost * self.increment
+            self.cost = round(self.cost, 5)
         end
     end
     return metal
@@ -54,4 +57,26 @@ end
 
 function button:updateProgress(amount)
     self.progress = math.min(self.progress + amount, self.progressMax)
+end
+
+function round(num, factor)
+    factor = factor or 1
+    local dif = num % factor
+    if dif < (factor / 2) then
+        return num - dif
+    else
+        return num + factor - dif
+    end
+end
+
+function round_d(num, factor)
+    local factor = factor or 1
+    local dif = num % factor
+    return num - dif
+end
+
+function round_u(num, factor)
+    local factor = factor or 1
+    local dif = num % factor
+    return num + factor - dif
 end

@@ -6,6 +6,7 @@ require('defensebot')
 require('enemybot')
 require('bullet')
 require('button')
+require('EnemyBase')
 --io.stdout:setvbuf("no") May or may not be needed for print statements
 
 function love.load()
@@ -15,6 +16,7 @@ function love.load()
     mine = building:new(20, 200, 30, 30, {r = 139, g = 69, b = 19}, 'm')
 
     factory = factory:new(100, 300, 50, 100)
+    enemybase = EnemyBase:new(700, 200, 50, 200)
 
     minebots = {}
     table.insert(minebots, minebot:new(mine, factory))
@@ -36,14 +38,14 @@ function love.load()
 
     table.insert(minebots, m1)
 
-    table.insert(buttons, button:new(350, 550, 100, 50, 'DefenseBot', 10, function() 
+    table.insert(buttons, button:new(350, 550, 100, 50, 'DefenseBot', 5, function() 
             table.insert(defensebots, defensebot:new(bullets))
         end)
     )
 
-    table.insert(buttons, button:new(150, 550, 100, 50, 'MineBot', 250, function() 
+    table.insert(buttons, button:new(150, 550, 100, 50, 'MineBot', 25, function() 
         table.insert(minebots, minebot:new(mine, factory))
-    end)
+    end, 1.33)
 )
 
 end
@@ -71,6 +73,7 @@ end
 function love.draw()
     mine:draw()
     factory:draw()
+    enemybase:draw()
     for i in ipairs(enemybots) do
         enemybots[i]:draw()
     end

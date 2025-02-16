@@ -1,15 +1,14 @@
-factory = {
-    metal = 250,
+EnemyBase = {
     color = {
         r = 153,
         g = 0,
-        b = 255
+        b = 45
     },
-    name = 'f'
+    name = 'e'
 }
 font = love.graphics.newFont()
 
-function factory.new(self, x, y, w, h)
+function EnemyBase.new(self, x, y, w, h)
     o = {}
     setmetatable(o, self)
     self.__index = self
@@ -25,20 +24,15 @@ function factory.new(self, x, y, w, h)
     return o
 end
 
-function factory.takeDamage(self, damage)
+function EnemyBase.takeDamage(self, damage)
     self.health = self.health - damage
     if self.health <= 0 then
-        --Game Over!
+        -- You Win!
     end
 end
 
-function factory.draw(self)
+function EnemyBase.draw(self)
     love.graphics.setColor(love.math.colorFromBytes(self.color.r, self.color.g, self.color.b))
     love.graphics.rectangle("line", self.x, self.y, self.w,self.h)
     love.graphics.print(self.name, self.textx - font:getWidth(self.name)/2, self.texty - font:getHeight(self.name)/2)
-
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.print('metal: ' .. self.metal, 50, 50)
-    love.graphics.print('health: ' .. self.health, 50, 70)
-    
 end
