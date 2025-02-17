@@ -1,5 +1,4 @@
 factory = {
-    metal = 250,
     color = {
         r = 153,
         g = 0,
@@ -13,7 +12,7 @@ function factory.new(self, x, y, w, h)
     o = {}
     setmetatable(o, self)
     self.__index = self
-
+    o.metal = 0
     o.x = x
     o.y = y
     o.w = w

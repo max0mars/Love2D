@@ -3,9 +3,9 @@ bullet.__index = bullet
 
 function bullet:new(startspot, tar, damage, bspeed)
     local tarx, tary
-    if tar.name == 'f' then
+    if tar.name == 'f' or tar.name == 'e' then
         tarx = tar.x + tar.w / 2
-        tary = tar.y + tar.h / 2
+        tary = startspot.y
     else
         tarx = tar.x
         tary = tar.y

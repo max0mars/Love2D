@@ -27,13 +27,15 @@ function button:draw()
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
     love.graphics.setColor(1, 1, 1)
     love.graphics.printf(self.text, self.x, self.y + 10, self.width, "center")
-    love.graphics.printf(self.cost, self.x, self.y + 25, self.width, "center")
+    if self.cost > 0 then
+        love.graphics.printf(self.cost, self.x, self.y + 25, self.width, "center")
+    end
 
-    local progressWidth = (self.progress / self.progressMax) * self.width
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.rectangle('fill', self.x, self.y + self.height + 5, progressWidth, 10)
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle('line', self.x, self.y + self.height + 5, self.width, 10)
+    -- local progressWidth = (self.progress / self.progressMax) * self.width
+    -- love.graphics.setColor(0, 1, 0)
+    -- love.graphics.rectangle('fill', self.x, self.y + self.height + 5, progressWidth, 10)
+    -- love.graphics.setColor(1, 1, 1)
+    -- love.graphics.rectangle('line', self.x, self.y + self.height + 5, self.width, 10)
 end
 
 function button:isClicked(x, y, metal)
@@ -44,6 +46,7 @@ function button:isClicked(x, y, metal)
 end
 
 function button:click(x, y, metal)
+    local metal = metal or 0
     if self:isClicked(x, y) and self.callback then
         if metal >= self.cost and self:isClicked(x, y) and self.callback then
             self.callback()

@@ -4,7 +4,7 @@ EnemyBase = {
         g = 0,
         b = 45
     },
-    name = 'e'
+    name = 'e',
 }
 font = love.graphics.newFont()
 
@@ -35,4 +35,8 @@ function EnemyBase.draw(self)
     love.graphics.setColor(love.math.colorFromBytes(self.color.r, self.color.g, self.color.b))
     love.graphics.rectangle("line", self.x, self.y, self.w,self.h)
     love.graphics.print(self.name, self.textx - font:getWidth(self.name)/2, self.texty - font:getHeight(self.name)/2)
+
+    love.graphics.setColor(1, 1, 1)
+    local healthtext = 'Health\n ' .. self.health
+    love.graphics.print(healthtext, 775 - font:getWidth(healthtext)/2, 170 - font:getHeight(healthtext)/2)
 end

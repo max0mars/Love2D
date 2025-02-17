@@ -48,10 +48,10 @@ function defensebot:new(bullets)
 end
 
 
-function defensebot:update(dt, enemybots)
+function defensebot:update(dt, enemybots, base)
     if self.delete then return end
     self.counter = self.counter + dt
-    if not self:attack(enemybots) then
+    if not self:attack(enemybots, base) then
         self:move(dt)
     else
         if(self.counter > self.attackspeed) then
@@ -81,7 +81,7 @@ end
     returns true if enemy found, otherwise false
     ** untested! **
 ]]
-function defensebot:attack(enemybots)
+function defensebot:attack(enemybots, base)
     if(enemybots == nil) then return false end
 
     self.target = nil
@@ -93,6 +93,16 @@ function defensebot:attack(enemybots)
         if dist < self.rangeSq then
             if(dist < prev) then
                 self.target = enemybots[i]
+                prev = dist
+            end
+        end
+    end
+    if base then
+        local x = base.x + base.w/2 - self.x
+        dist = x*x
+        if dist < self.rangeSq then
+            if(dist < prev) then
+                self.target = base
                 prev = dist
             end
         end

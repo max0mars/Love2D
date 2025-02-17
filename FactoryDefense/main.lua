@@ -15,8 +15,8 @@ function love.load()
 
     mine = building:new(20, 200, 30, 30, {r = 139, g = 69, b = 19}, 'm')
 
-    factory = factory:new(100, 300, 50, 100)
-    enemybase = EnemyBase:new(700, 200, 50, 200)
+    factory = factory:new(100, 200, 50, 300)
+    enemybase = EnemyBase:new(750, 200, 50, 300)
 
     minebots = {}
     table.insert(minebots, minebot:new(mine, factory))
@@ -29,91 +29,122 @@ function love.load()
 
     buttons = {}
 
+    GameState = 0 -- 0 = ingame, 1 = win, 2 = loss
+    pause = false
+    upgradeMenu = false
+
     spawnrate = 0.1
     waverate = 15
     wavecount = 1
-    spawnsremaining = 2
+    spawnsremaining = 0
     counter = spawnrate
     counter2 = waverate
 
     table.insert(minebots, m1)
 
-    table.insert(buttons, button:new(350, 550, 100, 50, 'DefenseBot', 5, function() 
+    table.insert(buttons, button:new(400, 550, 100, 50, 'DefenseBot', 5, function() 
             table.insert(defensebots, defensebot:new(bullets))
         end)
     )
 
-    table.insert(buttons, button:new(150, 550, 100, 50, 'MineBot', 25, function() 
+    table.insert(buttons, button:new(0, 550, 100, 50, 'MineBot', 25, function() 
         table.insert(minebots, minebot:new(mine, factory))
     end, 1.33)
-)
+    )
+
+    table.insert(buttons, button:new(0, 550, 100, 50, 'Upgrade', 25, function() 
+        --open menu
+        upgradeMenu = not upgradeMenu
+        end
+        )
+    )
+
+    try_again = button:new(400, 500, 100, 50, 'Try Again', 0, function() 
+            init()
+        end)
 
 end
 
 function love.update(dt)
-    for i in ipairs(enemybots) do
-        enemybots[i]:update(dt, defensebots, factory)
-    end
-    for i in ipairs(defensebots) do
-        defensebots[i]:update(dt, enemybots)
-    end
-    for i in ipairs(minebots) do
-        minebots[i]:update(dt)
-    end
-    for i in ipairs(bullets) do
-        bullets[i]:update(dt)
-    end
-    waveupdate(dt)
-    keydown(dt) -- keyboard input for holding down a button
-    CleanTable(defensebots)
-    CleanTable(enemybots)
-    CleanTable(bullets)
+    if(pause) then return end
+    if(factory.health <= 0) then GameState = 2 end
+    if(enemybase.health <= 0) then GameState = 1 end
+    if(GameState == 0) then
+        for i in ipairs(enemybots) do
+            enemybots[i]:update(dt, defensebots, factory)
+        end
+        for i in ipairs(defensebots) do
+            defensebots[i]:update(dt, enemybots, enemybase)
+        end
+        for i in ipairs(minebots) do
+            minebots[i]:update(dt)
+        end
+        for i in ipairs(bullets) do
+            bullets[i]:update(dt)
+        end
+        waveupdate(dt)
+        keydown(dt) -- keyboard input for holding down a button
+        CleanTable(defensebots)
+        CleanTable(enemybots)
+        CleanTable(bullets)   
+    end 
 end
 
 function love.draw()
-    mine:draw()
-    factory:draw()
-    enemybase:draw()
-    for i in ipairs(enemybots) do
-        enemybots[i]:draw()
+    if pause then love.graphics.print("Paused", 400, 150) end
+    if GameState == 1 then
+        love.graphics.print("You Win!", 400, 300)
+        try_again:draw()
+    elseif GameState == 2 then
+        local txt = "You Lose!\n" .. "Better Luck Next Time!"
+        love.graphics.print(txt, 400 - font:getWidth(txt)/2, 300 - font:getHeight(txt)/2)
+        try_again:draw()
+    elseif(GameState == 0) then 
+        if upgradeMenu then
+            
+        mine:draw()
+        factory:draw()
+        enemybase:draw()
+        for i in ipairs(enemybots) do
+            enemybots[i]:draw()
+        end
+        for i in ipairs(defensebots) do
+            defensebots[i]:draw()
+        end
+        for i in ipairs(minebots) do
+            minebots[i]:draw()
+        end
+        for i in ipairs(bullets) do
+            bullets[i]:draw()
+        end
+        for i in ipairs(buttons) do
+            buttons[i]:draw()
+        end
+        love.graphics.setColor(0,1,0)
+        love.graphics.line(0, 200, 800, 200)
+        love.graphics.line(0, 500, 800, 500)
     end
-    for i in ipairs(defensebots) do
-        defensebots[i]:draw()
-    end
-    for i in ipairs(minebots) do
-        minebots[i]:draw()
-    end
-    for i in ipairs(bullets) do
-        bullets[i]:draw()
-    end
-    for i in ipairs(buttons) do
-        buttons[i]:draw()
-    end
-    love.graphics.setColor(0,1,0)
-    love.graphics.line(0, 200, 800, 200)
-    love.graphics.line(0, 500, 800, 500)
+    
 
 end
 
 function love.keypressed(key, scancode, isrepeat)
     if key == "escape" then
        love.event.quit()
-    elseif key == "space" then
-        table.insert(minebots, minebot:new(mine, factory))
-    elseif key == "u" then
-        m1:upgrade('capacity', 50)
-    elseif key == "9" then
-        for i = 1, 10 do
-            table.insert(defensebots, defensebot:new(bullets))
-            table.insert(enemybots, enemybot:new(bullets))
-        end
+    elseif key == "p" then
+        pause = not pause
     end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
+    if(pause) then return end
     if button == 1 then -- Left mouse button
-        for i in ipairs(buttons) do
-            factory.metal = buttons[i]:click(x, y, factory.metal)
+        if GameState == 0 then
+            for i in ipairs(buttons) do
+                factory.metal = buttons[i]:click(x, y, factory.metal)
+            end
+        else
+            try_again:click(x, y)
         end
     end
 end
@@ -169,4 +200,43 @@ function CleanTable(t) -- removes any elements marked for deletion
             j = j + 1
         end
     end
+end
+
+function init()
+    mine = building:new(20, 200, 30, 30, {r = 139, g = 69, b = 19}, 'm')
+
+    factory = factory:new(100, 200, 50, 300)
+    enemybase = EnemyBase:new(750, 200, 50, 300)
+
+    minebots = {}
+    table.insert(minebots, minebot:new(mine, factory))
+
+    bullets = {}
+
+    defensebots = {}
+
+    enemybots = {}
+
+    buttons = {}
+
+    GameState = 0 -- 0 = ingame, 1 = win, 2 = loss
+
+    spawnrate = 0.1
+    waverate = 15
+    wavecount = 1
+    spawnsremaining = 0
+    counter = spawnrate
+    counter2 = waverate
+
+    table.insert(minebots, m1)
+
+    table.insert(buttons, button:new(350, 550, 100, 50, 'DefenseBot', 5, function() 
+            table.insert(defensebots, defensebot:new(bullets))
+        end)
+    )
+
+    table.insert(buttons, button:new(150, 550, 100, 50, 'MineBot', 25, function() 
+        table.insert(minebots, minebot:new(mine, factory))
+    end, 1.33)
+    )
 end

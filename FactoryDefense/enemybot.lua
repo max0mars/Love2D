@@ -5,7 +5,7 @@ function enemybot:new(bullets, factory)
     o = {}
     setmetatable(o, self)
     self.__index = self
-    o.x = 800
+    o.x = 750
 
     o.delete = false
     o.y = love.math.random(200, 500)
@@ -21,7 +21,6 @@ function enemybot:new(bullets, factory)
     o.target = nil
     o.counter = 0  
     o.bullets = bullets
-    o.factory = factory
 
     --stats
     o.speed = 50
@@ -69,8 +68,8 @@ function enemybot:attack(defensebots, factory)
     end
     if factory then
         x = factory.x + factory.w/2 - self.x
-        y = factory.y + factory.h/2 - self.y
-        dist = x*x + y*y
+        -- y = factory.y + factory.h/2 - self.y
+        dist = x*x
         if dist < self.rangeSq then
             if(dist < prev) then
                 self.target = factory
