@@ -1,0 +1,8 @@
+Things to add:
+- different types of enemies
+- defense turrets
+- upgrade/research tree (better robot stats, more miners, etc.)
+
+
+Maybe make table holding defense bots/enemy bots generic so can add other things like structures or different types of entities
+- might have to adjust the x,y of structures and other things
