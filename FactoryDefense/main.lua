@@ -29,10 +29,12 @@ function love.load()
 
     spawnrate = 0.1
     waverate = 15
+    holdrate = 0.1
     wavecount = 1
     spawnsremaining = 2
     counter = spawnrate
     counter2 = waverate
+    counter3 = holdrate
 
     table.insert(minebots, m1)
 
@@ -89,7 +91,6 @@ function love.draw()
     love.graphics.setColor(0,1,0)
     love.graphics.line(0, 200, 800, 200)
     love.graphics.line(0, 500, 800, 500)
-
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -147,6 +148,17 @@ function keydown(dt)
         if(counter2 < 0) then
             table.insert(enemybots, enemybot:new(bullets))
             counter2 = spawnrate
+        end
+    end
+
+    if love.mouse.isDown(1) then
+        counter3 = counter3 - dt
+        if(counter3 < 0) then
+            for i in ipairs(buttons) do
+                local x, y = love.mouse.getPosition()
+                factory.metal = buttons[i]:click(x, y, factory.metal)
+            end
+            counter3 = holdrate
         end
     end
 end
