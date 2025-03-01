@@ -100,7 +100,7 @@ function love.draw()
         love.graphics.print(txt, 400 - font:getWidth(txt)/2, 300 - font:getHeight(txt)/2)
         try_again:draw()
     elseif(GameState == 0) then 
-        if upgradeMenu then
+        --if upgradeMenu then
             
         mine:draw()
         factory:draw()
